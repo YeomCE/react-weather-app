@@ -1,38 +1,88 @@
-.App {
-  text-align: center;
+*{margin: 0; padding: 0;}
+.bg{
+    position: absolute;
+    background-color: #daedff;
+    width: 100%;
+    height: 100vh;
+}
+.weather-box{
+    max-width: 770px;
+    width: 60%;
+    margin: auto;
+    margin-top: 250px;
+    height: 400px;
+    border-radius: 40px;
+    text-align: center;
+    padding-top: 45px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.weather-box .location{
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.weather-box .temperature-result, .weather-box .humidity-result{
+    color: rgb(8, 101, 28);
+    font-weight: bold;
+    font-size: 30px;
+    font-weight: 800;
+}
+.weather-box .temperature-result{
+    margin-bottom: 20px;
+}
+.weather-box .temperature, .weather-box .humidity{
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.weather-box .weather{
+    margin-top: 30px;
+    color: rgb(29, 29, 192);
+    font-size: 30px;
+    font-weight: bold;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.button-box{
+    max-width: 770px;
+    width: 60%;
+    margin: auto;
+    border-radius: 150px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px 0;
+    box-sizing: border-box;
+    /* background-color: black; */
+    margin-top: 20px;
 }
-
-.App-link {
-  color: #61dafb;
+.button-box Button{
+    height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+    background-color: rgb(255, 207, 16);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: black;
+    margin: 10px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.button-box Button:hover{
+    background-color: rgb(255, 159, 16);
+}
+.button-box .current-location{
+    height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+    background-color: rgb(255, 159, 16);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.button-box .current-location:hover{
+    background-color: rgb(255, 132, 16);
+    color: white;
 }
