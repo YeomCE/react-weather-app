@@ -5,6 +5,7 @@ import WeatherBox from './component/WeatherBox';
 import WeatherButton from './component/WeatherButton';
 import SearchBar from './component/SearchBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ErrorPage from './component/ErrorPage';
 
 // 1. 앱 실행 : 현재 위치 기반 날씨 정보
 // 2. 날씨 정보에는 도시, 섭씨, 화씨, 날씨 상태 정보
@@ -23,6 +24,8 @@ function App() {
   const [city, setCity] = useState('')
 
   const [searchValue, setSearchValue] = useState('')
+
+  const [errorNum, setErrorNum] = useState('')
 
   // 내 현재 위치 찾기
   const getCurrentLocation = () => {
@@ -64,9 +67,10 @@ function App() {
   return (
     <div>
       <div className='bg'>
-        <SearchBar setSearchValue={setSearchValue} searchValue={searchValue} setWeather={setWeather}/>
-        <WeatherBox weather={weather} />
-        <WeatherButton cities={cities} setCity={setCity} setWeather={setWeather}/>
+        <SearchBar setSearchValue={setSearchValue} searchValue={searchValue} setWeather={setWeather} setErrorNum={setErrorNum}/>
+        { errorNum !== '' ? <ErrorPage errorNum={errorNum}/> : <WeatherBox weather={weather} />}
+        {/* <WeatherBox weather={weather} /> */}
+        <WeatherButton cities={cities} setCity={setCity} setWeather={setWeather} setErrorNum={setErrorNum}/>
       </div>
     </div>
   );
