@@ -3,6 +3,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import WeatherBox from './component/WeatherBox';
 import WeatherButton from './component/WeatherButton';
+import SearchBar from './component/SearchBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // 1. 앱 실행 : 현재 위치 기반 날씨 정보
@@ -16,12 +17,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
 
   const [weather, setWeather] = useState(null)
-  const cities = ['paris', 'new york', 'tokyo', 'seoul', 'Hong Kong', 'Gemeente Amsterdam', 'Canberra']
+  const cities = ['Paris', 'New York', 'Tokyo', 'Seoul', 'Hong Kong', 'Amsterdam', 'Canberra']
 
 
   const [city, setCity] = useState('')
 
+  const [searchValue, setSearchValue] = useState('')
 
+  // 내 현재 위치 찾기
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude
@@ -30,6 +33,7 @@ function App() {
     });
   }
 
+  // 로딩 직후 초기 화면
   const getWeatherByCurrentLocation = async (lat, lon) => {
     let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
     let response = await fetch(url);
@@ -37,6 +41,7 @@ function App() {
     setWeather(data);
   }
 
+  // 지역 버튼 클릭 시 화면
   const getWeatherByCity = async () => {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
     let response = await fetch(url);
@@ -59,6 +64,7 @@ function App() {
   return (
     <div>
       <div className='bg'>
+        <SearchBar setSearchValue={setSearchValue} searchValue={searchValue} setWeather={setWeather}/>
         <WeatherBox weather={weather} />
         <WeatherButton cities={cities} setCity={setCity} setWeather={setWeather}/>
       </div>
@@ -67,3 +73,6 @@ function App() {
 }
 
 export default App;
+
+// 로딩
+// 반응형 조정
