@@ -2,7 +2,7 @@ import React from 'react'
 import { FaSearch } from "react-icons/fa";
 
 
-const SearchBar = ({ setSearchValue, searchValue, setWeather, setErrorNum }) => {
+const SearchBar = ({ setSearchValue, searchValue, setCity }) => {
 
     const onChangeSearch = (e) => {
         setSearchValue(e.target.value);
@@ -16,27 +16,13 @@ const SearchBar = ({ setSearchValue, searchValue, setWeather, setErrorNum }) => 
         }
     }
 
-    const weatherSearch = async (searchValue) => {
-        let url = `https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
-        let response = await fetch(url);
-        let data = await response.json();
-        console.log(data)
-        if(data.cod === "400"){
-            // alert("Please enter a city name.")
-            setErrorNum('400')
-            
-        }
-        else if(data.cod === "404"){
-            // alert("You have entered a wrong city name. Please enter the correct city name.")
-            setErrorNum('404')
+    const weatherSearch =()=>{
+        if(searchValue === ''){
+            setCity("error400")
         }
         else{
-            setErrorNum('')
-            setWeather(data);
-            console.log("!!")
+            setCity(searchValue);
         }
-
-        
     }
 
     return (
@@ -45,7 +31,7 @@ const SearchBar = ({ setSearchValue, searchValue, setWeather, setErrorNum }) => 
                 onChange={onChangeSearch}
                 onClick={() => { inputCursor() }}
                 onKeyDown={(e) => activeEnter(e)} />
-            <button className='search-button' onClick={() => { weatherSearch(searchValue) }}><FaSearch /></button>
+            <button className='search-button' onClick={() => { weatherSearch() }}><FaSearch /></button>
         </div>
     )
 }

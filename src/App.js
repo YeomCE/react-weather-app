@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import WeatherBox from './component/WeatherBox';
 import WeatherButton from './component/WeatherButton';
 import SearchBar from './component/SearchBar';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import ErrorPage from './component/ErrorPage';
+import ClipLoader from "react-spinners/ClipLoader";
 
 // 1. 앱 실행 : 현재 위치 기반 날씨 정보
 // 2. 날씨 정보에는 도시, 섭씨, 화씨, 날씨 상태 정보
@@ -17,9 +17,10 @@ import ErrorPage from './component/ErrorPage';
 // 검색기능도 있으면 좋을듯
 function App() {
 
-  const [weather, setWeather] = useState(null)
   const cities = ['Paris', 'New York', 'Tokyo', 'Seoul', 'Hong Kong', 'Amsterdam', 'Canberra']
-
+  const [weather, setWeather] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [apiError, setAPIError] = useState("");
 
   const [city, setCity] = useState('')
 
@@ -38,25 +39,56 @@ function App() {
 
   // 로딩 직후 초기 화면
   const getWeatherByCurrentLocation = async (lat, lon) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
-    let response = await fetch(url);
-    let data = await response.json();
-    setWeather(data);
+    try {
+      let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
+      let response = await fetch(url);
+      let data = await response.json();
+      setWeather(data);
+      setErrorNum('')
+      setLoading(false)
+    }
+    catch (err) {
+      setAPIError(err.message);
+      setLoading(false);
+    }
   }
 
   // 지역 버튼 클릭 시 화면
   const getWeatherByCity = async () => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
-    let response = await fetch(url);
-    let data = await response.json();
-    setWeather(data);
+    try {
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=0a07842a0bb24bdd9500ea70c6b4236e`
+      let response = await fetch(url);
+      let data = await response.json();
+      if (data.cod === "400" || city === 'error400') {
+        // alert("Please enter a city name.")
+        setErrorNum('400')
+        setLoading(false)
+
+      }
+      else if (data.cod === "404") {
+        // alert("You have entered a wrong city name. Please enter the correct city name.")
+        setErrorNum('404')
+        setLoading(false)
+      }
+      else {
+        setErrorNum('')
+        setWeather(data);
+        setLoading(false)
+      }
+    }
+    catch (err) {
+      setAPIError(err.message);
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    if(city ===''){
+    if (city === '' || city === 'current') {
+      setLoading(true);
       getCurrentLocation();
     }
-    else{
+    else {
+      setLoading(true);
       getWeatherByCity();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,17 +98,32 @@ function App() {
 
   return (
     <div>
-      <div className='bg'>
-        <SearchBar setSearchValue={setSearchValue} searchValue={searchValue} setWeather={setWeather} setErrorNum={setErrorNum}/>
-        { errorNum !== '' ? <ErrorPage errorNum={errorNum}/> : <WeatherBox weather={weather} />}
-        {/* <WeatherBox weather={weather} /> */}
-        <WeatherButton cities={cities} setCity={setCity} setWeather={setWeather} setErrorNum={setErrorNum}/>
-      </div>
+      {loading
+        ? (
+          <div className='loaing-bg'>
+            <ClipLoader color='#999' loading={loading} size={100} aria-label="Loading Spinner" data-testid="loader" />
+          </div>
+        )
+        : !apiError ?
+        (
+          <div className='bg'>
+            <SearchBar setSearchValue={setSearchValue} searchValue={searchValue} setWeather={setWeather} setErrorNum={setErrorNum} setLoading={setLoading} setCity={setCity} />
+            {errorNum !== '' ? <ErrorPage errorNum={errorNum} /> : <WeatherBox weather={weather} />}
+            {/* <WeatherBox weather={weather} /> */}
+            <WeatherButton cities={cities} setCity={setCity} setErrorNum={setErrorNum} city={city} />
+          </div>
+        )
+        : (
+          apiError
+        )
+      }
+
     </div>
   );
 }
 
 export default App;
 
-// 로딩
-// 반응형 조정
+//
+// try-catch
+// 활성화된 버튼 색상
