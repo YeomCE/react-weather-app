@@ -60,13 +60,11 @@ function App() {
       let response = await fetch(url);
       let data = await response.json();
       if (data.cod === "400" || city === 'error400') {
-        // alert("Please enter a city name.")
         setErrorNum('400')
         setLoading(false)
 
       }
       else if (data.cod === "404") {
-        // alert("You have entered a wrong city name. Please enter the correct city name.")
         setErrorNum('404')
         setLoading(false)
       }
